@@ -48,12 +48,12 @@ data = data.drop('is_metal', axis=1)
 data_conduc = data_conduc.drop('is_metal', axis=1)
 print(f'Current shape of training data is {data.shape}')
 
-data.to_pickle('./ricci_formatted.pkl')
-data_conduc.to_pickle('./ricci_conductivity.pkl')
+data.to_pickle('Project3/Datasets/ricci_formatted.pkl')
+data_conduc.to_pickle('Project3/Datasets/ricci_conductivity.pkl')
 
-superframe_conduc = [data_conduc[i:i+9999] for i in range(0,len(data_conduc),9999)]
+superframe_conduc = [data_conduc[i:i+6800] for i in range(0,len(data_conduc),6800)]
 superframe = [data[i:i+2000] for i in range(0,len(data),2000)]
-superframe_conduc[0].to_pickle('Project3/ricci_conductivity_partitioned.pkl')
+superframe_conduc[0].to_pickle('Project3/Datasets/ricci_conductivity_partitioned.pkl')
 
 print(superframe_conduc[0])
-superframe[4].to_pickle('./ricci_partition.pkl')
+superframe[4].to_pickle('Project3/Datasets/ricci_partition.pkl')

@@ -26,6 +26,7 @@ efficiency
 
 import xgboost as xgb
 import numpy as np
+import time
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import KFold, RandomizedSearchCV
 
@@ -36,25 +37,28 @@ training_set, testing_set = ricci()
 
 X_train, y_train = training_set ; X_test, y_test = testing_set
 
-regressor = xgb.XGBRFRegressor(booster = 'dart',
+regressor = xgb.XGBRegressor(booster = 'dart',
                              objective = 'reg:squarederror',
                              eval_metric = 'mae')
 
 hyperspace = {
-    'num_parallel_tree':[1,5,10],
-    'min_child_weight':[50,100,500],
-    'gamma':[i/10.0 for i in range(1,3)],
-    'reg_alpha' : [1,10,40],
-    'subsample':[i/10.0 for i in range(6,11)],
-    'colsample_bytree':[i/10.0 for i in range(6,11)],
-    'max_depth': [2,3,4,6,7],
-    'eta': np.logspace(-4,-1,10),
-    'skip_drop' : [0.5,0.8,1.],
-    'rate_drop' : [0.5,0.6,0.7]
+    'n_estimators':[1,5,10], # 3
+    'min_child_weight':[50,100,500], # 3
+    'gamma':[i/10.0 for i in range(1,6)], # 5
+    'reg_alpha' : [0,0.0001,0.001,0.1], # 4
+    'reg_lambda' : [0,0.00001,10,40], # 4
+    'subsample':[i/10.0 for i in range(6,11)], # 4
+    'colsample_bytree':[i/10.0 for i in range(6,11)], # 4
+    'max_depth': [2,3,4,6,7], # 5
+    'eta': np.logspace(-5,1,10), # 10
+    'skip_drop' : [0.5,0.8,1.], # 3
+    'rate_drop' : [0.5,0.6,0.7] # 3
 }
 
-CVFolds = KFold(n_splits = 2)
+print(hyperspace['gamma'])
 
+CVFolds = KFold(n_splits = 5)
+start = time.perf_counter()
 grid = RandomizedSearchCV(regressor,
                     hyperspace,
                     scoring = 'neg_root_mean_squared_error',
@@ -66,13 +70,15 @@ grid = RandomizedSearchCV(regressor,
 params = grid.best_params_
 print(params)
 
-hypermodel = xgb.XGBRFRegressor(booster = 'dart',
+
+hypermodel = xgb.XGBRegressor(booster = 'dart',
                              objective = 'reg:squarederror',
                              eval_metric = 'mae',
-                             num_parallel_tree = params['num_parallel_tree'],
+                             n_estimators = params['n_estimators'],
                              min_child_weight = params['min_child_weight'],
                              gamma = params['gamma'],
-                             reg_lambda = params['reg_alpha'],
+                             reg_alpha = params['reg_alpha'],
+                             reg_lambda = params['reg_lambda'],
                              subsample = params['subsample'],
                              colsample_bytree = params['colsample_bytree'],
                              max_depth = params['max_depth'],
@@ -80,10 +86,13 @@ hypermodel = xgb.XGBRFRegressor(booster = 'dart',
                              skip_drop = params['skip_drop'],
                              rate_drop = params['rate_drop']
                     )
-
 hypermodel.fit(X_train,y_train,
 
                eval_set = [(X_train,y_train),(X_test,y_test)]
 )
+fin = time.perf_counter()
 
-hypermodel.save_model('./tuned_xgboost.json')
+hypermodel.save_model('Project3/Regressors/tuned_xgboost.json')
+
+print('REGRESSION REPORT:')
+print(f'Hyperparameter search and fit performed in {fin-start} s')

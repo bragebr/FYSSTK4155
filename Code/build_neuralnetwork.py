@@ -74,7 +74,7 @@ def _compile(units,
     model.add(Dense(1)) # output layer
 
     model.compile(
-    optimizer  = keras.optimizers.legacy.RMSprop(learning_rate=learning_rate),
+    optimizer  = keras.optimizers.legacy.Adam(learning_rate=learning_rate),
     loss       = 'mean_squared_error',
     metrics    = [keras.metrics.MeanSquaredError()]
     )
@@ -139,8 +139,9 @@ def build_model(hp):
 
 
     learning_rates = hp.Float('lr',
-                              min_value = 1e-4,
-                              max_value = 1e-1,
+                              min_value = 1e-5,
+                              max_value = 1,
+                              step = 10,
                               sampling = 'log')
 
     model = Sequential() # initialize sequential model
@@ -149,14 +150,14 @@ def build_model(hp):
                                             # and activation functions
 
     if dropout: # dropout layer for better control of global weights
-        model.add(Dropout(rate=0.15))
+        model.add(Dropout(rate=0.25))
 
     model.add(Dense(units=units1, activation=activation1)) # first hidden layer
                                                            # with varying NO.
                                                            # nodes and activation
                                                            # functions
     if dropout1:
-        model.add(Dropout(rate=0.15))
+        model.add(Dropout(rate=0.25))
 
     if third_layer: # third layer option
         model.add(Dense(units = units2, activation=activation2))
@@ -167,7 +168,7 @@ def build_model(hp):
     model.add(Dense(1)) # output layer
 
     model.compile(
-    optimizer  = keras.optimizers.RMSprop(learning_rate=learning_rates),
+    optimizer  = keras.optimizers.Adam(learning_rate=learning_rates),
     loss       = 'mean_absolute_error',
     metrics    = [keras.metrics.MeanAbsoluteError()]
     )
@@ -197,7 +198,7 @@ def build_model(hp):
 
 """
 Hyperband() works by choosing a handful of the fittest candidates from one
-trial round to go forth into a new trial round and so on. 
+trial round to go forth into a new trial round and so on.
 """
 #==============================================================================
 
@@ -242,7 +243,7 @@ tuned_regressor.fit(X_train,
                     validation_split = 0.1,
                     callbacks=[keras.callbacks.EarlyStopping(patience=25)])
 
-tuned_regressor.save('./tuned_regressor.keras')
+tuned_regressor.save('Project3/Regressors/tuned_regressor.keras')
 fin = time.perf_counter()
 
 print('REGRESSION REPORT')
