@@ -8,6 +8,7 @@ Implementation of Ordinary Least Squares (OLS), Ridge and LASSO regression for t
 ## Project 2
 Implementation of a feed forward neural network (FFNN) from scratch with backpropagation. Under Examples the code is used for both regression and binary classification. 
 ## Project 3
+Implementation of Keras DNN and xgboost to predict thermal conductivity in inorganic materials. Implementation of regressor tuners are central to this project. 
 #### load_datasets.py
 Library: contains call to return scaled, normalized and train-test splitted data sets.
 #### build_neuralnetwork.py
