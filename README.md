@@ -3,9 +3,9 @@
 This is a project repository for codes developed in the course FYS-STK4155 at the University of Oslo.
 
 ## Project 1
-
+Implementation of Ordinary Least Squares (OLS), Ridge and LASSO regression for the purpose of studying topological data. 
 ## Project 2
-
+Implementation of a feed forward neural network (FFNN) from scratch with backpropagation. Under Examples the code is used for both regression and binary classification. 
 ## Project 3
 #### load_datasets.py
 Library: contains call to return scaled, normalized and train-test splitted data sets.
