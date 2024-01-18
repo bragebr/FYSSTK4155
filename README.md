@@ -1,6 +1,7 @@
 # FYSSTK4155
 
-This is a project repository for codes developed in the course FYS-STK4155 at the University of Oslo.
+This is a project repository for codes developed in the course FYS-STK4155 at the University of Oslo. All code in project 1 and 2 is written in collaboration with
+Ellen Reeka and Ines Santandreu. 
 
 ## Project 1
 Implementation of Ordinary Least Squares (OLS), Ridge and LASSO regression for the purpose of studying topological data. 
